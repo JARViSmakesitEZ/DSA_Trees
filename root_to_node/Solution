@@ -1,0 +1,51 @@
+/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+ 
+void approach1(TreeNode* root,int B,vector<int>& ans){
+    if(!root){
+        return;
+    }
+    if(root->val==B){
+        ans.push_back(B);
+        return;
+    }
+    approach1(root->left,B,ans);
+    if(ans.size()>0){
+        ans.insert(ans.begin(),root->val);
+        return;
+    }
+    approach1(root->right,B,ans);
+    if(ans.size()>0){
+        ans.insert(ans.begin(),root->val);
+    }
+
+}
+
+bool approach2(TreeNode* root,int B,vector<int>& ans){
+    if(!root){
+        return false;
+    }
+    
+    ans.push_back(root->val);
+    
+    if(root->val == B){
+        return true;
+    }
+    if(approach2(root->left,B,ans) || approach2(root->right,B,ans)){
+        return true;
+    }
+    ans.pop_back();
+    return false;
+}
+vector<int> Solution::solve(TreeNode* A, int B) {
+    vector<int> ans;
+    approach2(A,B,ans);
+    return ans;
+}
