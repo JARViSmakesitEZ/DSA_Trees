@@ -113,21 +113,22 @@ struct Node{
     the flattened linked list. */
 Node *flatten(Node *root)
 {
-   vector<int> vals;
+   priority_queue<int> q;
    Node* temp = root;
    while(temp!=NULL){
        Node* sub = temp;
        while(sub!=NULL){
-           vals.push_back(sub->data);
+           q.push(-1*sub->data);
            sub = sub->bottom;
        }
        temp = temp->next;
    }
-   sort(vals.begin(),vals.end());
-   Node* Root = new Node(vals[0]);
+   Node* Root = new Node(-1*q.top());
+   q.pop();
    temp = Root;
-   for(int i=1;i<vals.size();i++){
-       Node* newnode = new Node(vals[i]);
+    while(!q.empty()){
+       Node* newnode = new Node(-1*q.top());
+       q.pop();
        temp->bottom = newnode;
        temp = newnode;
    }
