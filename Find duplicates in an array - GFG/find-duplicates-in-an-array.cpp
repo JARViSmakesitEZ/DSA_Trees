@@ -16,9 +16,7 @@ class Solution{
                 arr[abs(arr[i])-1]*=-1;
             }
             else{
-                if(count(ans.begin(),ans.end(),abs(arr[i])-1)==0){
-                    s.insert(abs(arr[i])-1);
-                }
+                s.insert(abs(arr[i])-1);
             }
         }
         if(s.size()==0){//3 1 4 4 2
