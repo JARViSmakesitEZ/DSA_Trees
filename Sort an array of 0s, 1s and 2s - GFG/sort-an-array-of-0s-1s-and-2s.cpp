@@ -8,27 +8,23 @@ using namespace std;
 class Solution
 {
     public:
-    void sort012(int a[], int n)
+    void sort012(int arr[], int n)
     {
-        int temp[n];
-        int k = 0;
-        for(int i = 0;i<n;i++){
-            if(a[i]==0){
-                temp[k++] = 0;
+        int l = 0;
+        int m = 0;
+        int h = n-1;
+        while(m<=h){
+            if(arr[m]==0){
+                swap(arr[m],arr[l]);
+                m++;l++;
             }
-        }
-        for(int i = 0;i<n;i++){
-            if(a[i]==1){
-                temp[k++] = 1;
+            else if(arr[m]==2){
+                swap(arr[m],arr[h]);
+                h--;
             }
-        }
-        for(int i = 0;i<n;i++){
-            if(a[i]==2){
-                temp[k++] = 2;
+            else{
+                m++;
             }
-        }
-        for(int i = 0;i<n;i++){
-            a[i] = temp[i];
         }
     }
     
