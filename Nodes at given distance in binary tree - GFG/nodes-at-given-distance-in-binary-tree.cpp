@@ -100,50 +100,70 @@ class Solution
 private:
 
 public:
-    unordered_map<Node*,Node*> parent;
-    unordered_map<Node*,bool> visited;
-    Node* findNode(Node* root,int  target){
-        if(!root || root->data==target){
+    void trackParents(Node* root,unordered_map<Node*,Node*>& parent){
+        parent[root] = NULL;
+        queue<Node*> q;
+        q.push(root);
+        while(!q.empty()){
+            Node* curr = q.front();q.pop();
+            if(curr->left){
+                parent[curr->left] = curr;
+                q.push(curr->left);
+            }
+            if(curr->right){
+                parent[curr->right] = curr;
+                q.push(curr->right);
+            }
+        }
+    }
+    
+    Node* getTargetNode(Node* root,int target){
+        if(!root || root->data == target){
             return root;
         }
+        Node* left = getTargetNode(root->left,target);
+        Node* right = getTargetNode(root->right,target);
         
-        Node* left = findNode(root->left,target);
-        Node* right = findNode(root->right,target);
         return left==NULL?right:left;
-        
-    }
-    
-    void inorder(Node* root,Node* prnt){
-        if(!root){
-            return;
-        }
-        inorder(root->left,root);
-        parent[root] = prnt;
-        inorder(root->right,root);
-    }
-    
-    void subprob(Node* root,int k,vector<int>& subs){
-        if(!root || visited[root]){
-            return;
-        }
-        visited[root] = true;
-        if(k==0){
-            subs.push_back(root->data);
-            return;
-        }
-        subprob(root->left,k-1,subs);
-        subprob(root->right,k-1,subs);
-        subprob(parent[root],k-1,subs);
     }
 
     vector <int> KDistanceNodes(Node* root, int target , int k)
     {
-        Node* targetNode = findNode(root,target);
-        inorder(root,NULL);
-        vector<int> subs;
-        subprob(targetNode,k,subs);
-        sort(subs.begin(),subs.end());
-        return subs;
+        unordered_map<Node*,Node*> parent;
+        unordered_map<Node*,bool> visited;
+        Node* targetNode = getTargetNode(root,target);
+        trackParents(root,parent);
+        queue<Node*> q;
+        int currLevel = 0;
+        q.push(targetNode);
+        visited[targetNode] = true;
+        while(!q.empty()){
+            if(currLevel == k){
+                break;
+            }
+            currLevel++;
+            int size = q.size();
+            for(int i = 0;i<size;i++){
+                Node* curr = q.front();q.pop();
+                visited[curr] = true;
+                if(curr->left && !visited[curr->left]){
+                    q.push(curr->left);
+                }
+                if(curr->right && !visited[curr->right]){
+                    q.push(curr->right);
+                }
+                if(parent[curr] && !visited[parent[curr]]){
+                    q.push(parent[curr]);
+                }
+            }
+        }
+        vector<int> ans;
+        while(!q.empty()){
+            ans.push_back(q.front()->data);
+            q.pop();
+        }
+        sort(ans.begin(),ans.end());
+        return ans;
     }
 };
 
