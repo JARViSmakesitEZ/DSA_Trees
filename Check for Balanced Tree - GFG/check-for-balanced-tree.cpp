@@ -103,14 +103,18 @@ struct Node
 
 class Solution{
     public:
+    unordered_map<Node*,int> ht;
     int height(Node* root){
         if(!root){
             return 0;
         }
+        if(ht[root]){
+            return ht[root];
+        }
         int left = height(root->left);
         int right = height(root->right);
         
-        return max(left,right)+1;
+        return ht[root] = max(left,right)+1;
     }
     bool isBalanced(Node *root)
     {
