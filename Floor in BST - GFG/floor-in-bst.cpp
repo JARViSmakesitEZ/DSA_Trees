@@ -21,31 +21,22 @@ struct Node {
 class Solution{
 
 public:
-    void getVals(Node* root,vector<int>& arr){
+    void find(Node* root,int x,int& ans){
         if(!root){
             return;
         }
-        getVals(root->left,arr);
-        arr.push_back(root->data);
-        getVals(root->right,arr);
+        if(root->data<=x){
+            ans = root->data;
+            find(root->right,x,ans);
+        }
+        else{
+            find(root->left,x,ans);
+        }
     }
     int floor(Node* root, int x) {
-        vector<int> arr;
-        getVals(root,arr);
-        int l = 0;
-        int r = arr.size()-1;
-        int ans;
-        while(l<=r){
-            int mid  = l+(r-l)/2;
-            if(arr[mid]<=x){
-                ans = arr[mid];
-                l = mid+1;
-            }
-            else{
-                r = mid-1;
-            }
-        }
-        return x<arr[0]?-1:ans;
+        int ans = INT_MAX;
+        find(root,x,ans);
+        return ans==INT_MAX?-1:ans;
     }
 };
 
